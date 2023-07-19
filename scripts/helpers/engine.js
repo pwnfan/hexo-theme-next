@@ -107,6 +107,32 @@ hexo.extend.helper.register('i18n_path', function(language) {
 });
 
 /**
+ * Get page path given a certain language tag, pwnfan_customized
+ */
+hexo.extend.helper.register('i18n_path_pwnfan', function (language) {
+  const { path, lang } = this.page;
+  let base = path;
+
+  if (path === "index.html") { // homepage without language path
+    base = `${language}/${path}`;
+  } else if (path === `${lang}/index.html`) {  // homepage with a language path
+    if (language === "en") {
+      language = "";
+    }
+    base = path.replace(`${lang}/`, `${language}/`);
+  }
+  else if (!path.endsWith(".html")) {  // post page
+    if (path.startsWith(`${lang}/`)) {
+      base = `${language}/${path.slice(lang.length + 1)}`;
+    } else {
+      base = path.replace(`/${lang}/`, `/${language}/`);
+    }
+
+  }
+  return this.url_for(base);
+});
+
+/**
  * Get the language name
  */
 hexo.extend.helper.register('language_name', function(language) {
